@@ -80,7 +80,7 @@ class Compiler:
         folder, _, file = name.rpartition('/')
 
         model = source.joinpath(name, f'{file}.qc')
-        pipe = cls.run(game, executable, model)
+        pipe = cls.run(game, executable, model, '-nop4', '-fullcollide')
 
         with cls.lock:
             cls.pipes.append(pipe)
@@ -113,7 +113,7 @@ class Compiler:
         cls.run(game, executable, model)
 
     @classmethod
-    def run(cls, game: Path, executable: Path, model: Path) -> Popen:
+    def run(cls, game: Path, executable: Path, model: Path, *options: str) -> Popen:
         use_wine = platform == 'linux' and executable.suffix == '.exe'
 
         cwd = None
@@ -124,7 +124,7 @@ class Compiler:
             executable = executable.relative_to(cwd)
             model = model.relative_to(cwd)
 
-        args = [str(executable), '-game', str(game), str(model)]
+        args = [str(executable), *options, '-game', str(game), str(model)]
         if use_wine:
             args.insert(0, 'wine')
 
