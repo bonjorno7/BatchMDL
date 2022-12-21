@@ -4,7 +4,7 @@ from bpy.types import Collection, Context, Object, Operator
 
 from ..utils.common import get_collection_props, get_game_props, get_scene_props
 from ..utils.compile import Compiler, sanitize_model_name
-from ..utils.export import export_fbx, export_qc
+from ..utils.export import export_mesh, export_qc
 from ..utils.game import check_game
 
 
@@ -44,6 +44,7 @@ class ExportOperator(Operator):
         compiler_path = Path(game_props.compiler)
         source_path = Path(game_props.source)
         target_path = Path(game_props.target)
+        mesh_format: str = game_props.format
 
         scene_props = get_scene_props(context.scene)
         root_collection: Collection = scene_props.root_collection
@@ -110,15 +111,16 @@ class ExportOperator(Operator):
                 model_name = sanitize_model_name(f'{group_collection.name}/{model_collection.name}')
                 model_file = model_name.rpartition('/')[2]
 
-                path = source_path.joinpath(model_name, f'{model_file}_reference.fbx')
-                export_fbx(context, path, reference_objects, model_origin)
+                path = source_path.joinpath(model_name, f'{model_file}_reference.{mesh_format.lower()}')
+                export_mesh(context, path, reference_objects, model_origin, mesh_format)
 
                 if collision_objects:
-                    path = source_path.joinpath(model_name, f'{model_file}_collision.fbx')
-                    export_fbx(context, path, collision_objects, model_origin)
+                    path = source_path.joinpath(model_name, f'{model_file}_collision.{mesh_format.lower()}')
+                    export_mesh(context, path, collision_objects, model_origin, mesh_format)
 
                 path = source_path.joinpath(model_name, f'{model_file}.qc')
-                export_qc(path, model_name, bool(collision_objects), model_surface_property, model_material_folder)
+                use_collision = bool(collision_objects)
+                export_qc(path, model_name, use_collision, model_surface_property, model_material_folder, mesh_format)
 
                 Compiler.compile(game_path, compiler_path, source_path, target_path, model_name)
 

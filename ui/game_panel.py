@@ -52,5 +52,5 @@ class GamePanel(BasePanel):
             op.list, op.type = 'GAMES', 'MOVE_DOWN'
 
         if game_props:
-            for property_name in ('game', 'compiler', 'viewer', 'source', 'target'):
-                layout.prop(game_props, property_name, translate=False)
+            for property_name in ('game', 'compiler', 'viewer', 'source', 'target', 'format'):
+                layout.prop(game_props, property_name)

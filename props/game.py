@@ -1,4 +1,4 @@
-from bpy.props import StringProperty
+from bpy.props import EnumProperty, StringProperty
 from bpy.types import Context, PropertyGroup
 
 from ..utils.common import resolve_path, save_user_prefs
@@ -86,4 +86,18 @@ class GameProps(PropertyGroup):
         description='Folder for MDL files, typically <game>/models',
         subtype='DIR_PATH',
         update=update_target,
+    )
+
+    def update_format(self, context: Context):
+        save_user_prefs(context)
+
+    format: EnumProperty(
+        name='Format',
+        description='File format for meshes',
+        items=[
+            ('SMD', 'SMD', 'Slower but supports older games'),
+            ('FBX', 'FBX', 'Faster and supports two UV layers'),
+        ],
+        default='SMD',
+        update=update_format,
     )
