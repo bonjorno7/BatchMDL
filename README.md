@@ -1,7 +1,6 @@
 # BatchMDL
 
 BatchMDL is a Blender addon for exporting groups of static props to Source Engine.
-It uses FBX, and therefore will only work for newer games such as CS:GO.
 
 ## Usage
 
@@ -16,7 +15,7 @@ A game consists of a name and 5 paths.
 - **Game**: The folder containing `gameinfo.txt`; setting this will auto fill the other paths
 - **Compiler**: The program `studiomdl.exe`, which should be in your game's `bin` folder
 - **Viewer**: The program `hlmv.exe`, which should also be in your game's `bin` folder
-- **Source**: The folder for QC and FBX files, typically `modelsrc`
+- **Source**: The folder for QC and SMD/FBX files, typically `modelsrc`
 - **Target**: The folder for MDL files, typically `models`
 
 You may want to use a subfolder of `steamapps/common` as Source path if you plan on using
@@ -31,7 +30,10 @@ This addon requires a specific collection structure and naming convention.
 At the top there's the root collection, it contains group collections.
 Group collections in turn contain model collections.
 Model collections contain objects and collections that are exported.
+
 The name of a model is the name of its group and model collections, with a slash in between.
+Meaning a group collection named `A`, plus a model collection named `B`, will result in a model with the name `A/B`.
+Exported files are made lowercase and have certain characters replaced with underscores for compatibility.
 
 All objects and collections inside a model collection are exported into two files.
 Reference and collision, which is determined by the object or collection name.
