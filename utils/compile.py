@@ -4,7 +4,7 @@ from sys import platform
 from threading import Lock, Thread
 
 import bpy
-from bpy.app.timers import is_registered, register, unregister
+from bpy.app.timers import is_registered, register
 
 from .common import find_common_path, get_game_props, get_scene_props, tag_redraw
 
@@ -35,9 +35,6 @@ class Compiler:
 
     @classmethod
     def abort(cls):
-        if is_registered(cls.timer):
-            unregister(cls.timer)
-
         with cls.lock:
             while cls.pipes:
                 cls.pipes.pop().terminate()
@@ -92,6 +89,8 @@ class Compiler:
         with cls.lock:
             if pipe in cls.pipes:
                 cls.pipes.remove(pipe)
+            else:
+                return
 
         if target != output:
             target_folder = target.joinpath(folder)

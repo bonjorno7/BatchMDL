@@ -10,7 +10,8 @@ class AbortOperator(Operator):
     bl_options = {'REGISTER', 'INTERNAL'}
 
     def execute(self, context: Context) -> set[str]:
+        count = Compiler.total - Compiler.count
         Compiler.abort()
 
-        self.report({'INFO'}, 'Aborted')
+        self.report({'INFO'}, f'Aborted {count} compiles')
         return {'FINISHED'}

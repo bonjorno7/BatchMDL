@@ -1,4 +1,5 @@
 from pathlib import Path
+from time import time
 
 from bpy.types import Collection, Context, Object, Operator
 
@@ -38,6 +39,8 @@ class ExportOperator(Operator):
 
     def execute(self, context: Context) -> set[str]:
         Compiler.abort()
+        start = time()
+        count = 0
 
         game_props = get_game_props(context)
         game_path = Path(game_props.game)
@@ -123,8 +126,10 @@ class ExportOperator(Operator):
                 export_qc(path, model_name, use_collision, model_surface_property, model_material_folder, mesh_format)
 
                 Compiler.compile(game_path, compiler_path, source_path, target_path, model_name)
+                count += 1
 
+        end = time()
         Compiler.start()
 
-        self.report({'INFO'}, 'Exported')
+        self.report({'INFO'}, f'Exported {count} models in {round(end - start, 2)} seconds')
         return {'FINISHED'}
