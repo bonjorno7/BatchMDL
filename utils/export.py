@@ -3,7 +3,7 @@ from pathlib import Path
 
 import bmesh
 import bpy
-from bpy.types import Context, Object
+from bpy.types import Context, Material, Object
 from mathutils import Euler, Matrix
 
 SMD_MATRIX = Euler((0, 0, radians(-90))).to_matrix().to_4x4()
@@ -20,6 +20,7 @@ def export_mesh(context: Context, path: Path, objects: set[Object], origin: Obje
     object_hide_viewport: dict[Object, bool] = {}
     object_hide_select: dict[Object, bool] = {}
     object_select: dict[Object, bool] = {}
+    material_use_nodes: dict[Material, bool] = {}
 
     matrix = {'SMD': SMD_MATRIX, 'FBX': FBX_MATRIX}[format]
     if origin:
@@ -50,6 +51,10 @@ def export_mesh(context: Context, path: Path, objects: set[Object], origin: Obje
         object_select[object] = object.select_get()
         object.select_set(object in objects)
 
+    for material in bpy.data.materials:
+        material_use_nodes[material] = material.use_nodes
+        material.use_nodes = False
+
     try:
         function = {'SMD': export_smd, 'FBX': export_fbx}[format]
         function(context, path)
@@ -58,6 +63,9 @@ def export_mesh(context: Context, path: Path, objects: set[Object], origin: Obje
         raise
 
     finally:
+        for material, use_nodes in material_use_nodes.items():
+            material.use_nodes = use_nodes
+
         for object, select in object_select.items():
             object.select_set(select)
 
