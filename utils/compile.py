@@ -1,4 +1,5 @@
 from pathlib import Path
+from shutil import move
 from subprocess import PIPE, Popen
 from sys import platform
 from threading import Lock, Thread
@@ -102,7 +103,7 @@ class Compiler:
 
                 target_file.unlink(missing_ok=True)
                 if output_file.is_file():
-                    output_file.rename(target_file)
+                    move(output_file, target_file)
 
         cls.count += 1
 
