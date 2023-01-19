@@ -3,7 +3,7 @@ bl_info = {
     'author': 'bonjorno7',
     'description': 'Batch export static props to Source Engine',
     'blender': (3, 2, 0),
-    'version': (1, 1, 1),
+    'version': (1, 1, 2),
     'category': 'Import-Export',
     'location': 'View3D',
 }
