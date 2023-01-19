@@ -26,7 +26,7 @@ def find_executable(game_path: Path, *stems: str) -> Path | None:
 
     for stem in stems:
         for path in bin_path.rglob(f'{stem}*'):
-            if path.is_file() and path.stem == stem:
+            if path.is_file() and path.stem == stem and path.suffix in ('', '.exe'):
                 return path
 
     return None
