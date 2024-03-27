@@ -119,7 +119,8 @@ def export_smd(context: Context, path: Path):
             bm.to_mesh(mesh)
             bm.free()
 
-            mesh.calc_normals_split()
+            if hasattr(mesh, 'calc_normals_split'):
+                mesh.calc_normals_split()
 
             for polygon in mesh.polygons:
                 material_name = 'no_material'
@@ -143,6 +144,9 @@ def export_smd(context: Context, path: Path):
                     uv = ' '.join(f'{value:.6f}' for value in uv)
 
                     file.write(f'0  {position}  {normal}  {uv}\n')
+
+            if hasattr(mesh, 'free_normals_split'):
+                mesh.free_normals_split()
 
             bpy.data.meshes.remove(mesh)
 
