@@ -26,7 +26,7 @@ class GameProps(PropertyGroup):
         if executable := find_executable(game_path, 'quickmdl', 'studiomdl'):
             self['compiler'] = executable.as_posix()
 
-        if executable := find_executable(game_path, 'hlmv'):
+        if executable := find_executable(game_path, 'hlmvplusplus', 'hlmv'):
             self['viewer'] = executable.as_posix()
 
         self['source'] = find_source(game_path).as_posix()
